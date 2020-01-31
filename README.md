@@ -30,7 +30,6 @@
 
 * Color Mod
 * Color Mood
-* Long Exposure / Light Trail
 * Custom Tonemapping
 * Cross Process
 * Haarm Peter Duiker (HPD) Filmic Tonemapping
