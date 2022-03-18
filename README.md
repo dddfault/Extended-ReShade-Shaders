@@ -4,11 +4,11 @@
   <h3 align="center">A collection of ported old ReShade shaders which compatible with latest version of ReShade</h3>
 
   <p align="center">
-    <a href="https://github.com/dddfault/Legacy-ReShade-Shaders/issues">Report Bug</a>
+    <a href="https://github.com/dddfault/Extended-ReShade-Shaders/issues">Report Bug</a>
     ·
     <a href="https://reshade.me/forum/shader-presentation/2990-ported-reshade-2-x-effects">Request Port</a>
     ·
-    <a href="https://github.com/dddfault/Legacy-ReShade-Shaders/archive/master.zip">Download</a>
+    <a href="https://github.com/dddfault/Extended-ReShade-Shaders/archive/master.zip">Download</a>
   </p>
 </p>
 
@@ -52,7 +52,7 @@ ReShade 4.x.x, (Latest version is recommended)
 
 ### Installation
 
-1. [Download](https://github.com/dddfault/Legacy-ReShade-Shaders/archive/master.zip) this repository.
+1. [Download](https://github.com/dddfault/Extended-ReShade-Shaders/archive/master.zip) this repository.
 2. Extract the downloaded archive to your ReShade shaders folder or to whatever you want.
 3. Start your game, open the ReShade in-game menu and add new shader and texture path.
 
