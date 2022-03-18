@@ -1,6 +1,6 @@
 <!-- PROJECT LOGO -->
 <p align="center">
-  <h1 align="center">Legacy ReShade Shaders (WIP)</h3>
+  <h1 align="center">Extended ReShade Shaders (WIP)</h3>
   <h3 align="center">A collection of ported old ReShade shaders which compatible with latest version of ReShade</h3>
 
   <p align="center">
