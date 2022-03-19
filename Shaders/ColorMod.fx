@@ -10,18 +10,48 @@
 // INITIAL SETUP //////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 #include "ReShade.fxh"
-#include "Macros.fxh"
 
 // USER INTERFACE /////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-UI_FLOAT_D(cmodChroma,      "Color Mod Chroma", "Saturation adjustment for corresponding color", 0.0, 1.0, 0.7)
-UI_FLOAT3_D(cmodGamma,      "Color Mod Gamma", "Gamma adjustment for corresponding color", 1.0, 1.0, 1.0)
-UI_FLOAT3_D(cmodContrast,   "Color Mod Contrast", "Contrast adjustment for corresponding color", 1.0, 1.0, 1.0)
-UI_FLOAT3_D(cmodBrightness, "Color Mod Brightness", "Brightness adjustment for corresponding color", 0.0, 0.0, 0.0)
+uniform float cmodChroma <
+  ui_label    = "Color Mod Chroma";
+  ui_tooltip  = "Saturation adjustment for corresponding color";
+  ui_type     = "drag";
+  ui_min      = 0.0;
+  ui_max      = 1.0;
+  ui_step     = 0.01;
+  > = 0.7;
+
+uniform float3 cmodGamma <
+  ui_label    = "Color Mod Gamma";
+  ui_tooltip  = "Gamma adjustment for corresponding color";
+  ui_type     = "drag";
+  ui_min      = 0.0;
+  ui_max      = 1.0;
+  ui_step     = 0.01;
+  > = float3(1.0, 1.0, 1.0);
+
+uniform float3 cmodContrast <
+  ui_label    = "Color Mod Contrast";
+  ui_tooltip  = "Contrast adjustment for corresponding color";
+  ui_type     = "drag";
+  ui_min      = 0.0;
+  ui_max      = 1.0;
+  ui_step     = 0.01;
+  > = float3(1.0, 1.0, 1.0);
+
+uniform float3 cmodBrightness <
+  ui_label    = "Color Mod Brightness";
+  ui_tooltip  = "Brightness adjustment for corresponding color";
+  ui_type     = "drag";
+  ui_min      = 0.0;
+  ui_max      = 1.0;
+  ui_step     = 0.01;
+  > = float3(0.0, 0.0, 0.0);
 
 // PIXEL SHADER ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-void ColorMod(float4 vpos : SV_Position, float2 texcoord : TEXCOORD, out float4 color : SV_Target0)
+void PS_ColorMod(float4 vpos : SV_Position, float2 texcoord : TEXCOORD, out float4 color : SV_Target0)
 {
   color     = tex2D(ReShade::BackBuffer, texcoord.xy);
   color.rgb = (color.rgb - dot(color.rgb, 0.333)) * cmodChroma + dot(color.rgb, 0.333);
@@ -33,7 +63,11 @@ void ColorMod(float4 vpos : SV_Position, float2 texcoord : TEXCOORD, out float4 
 
 // TECHNIQUE //////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-
-TECHNIQUE(ColorMod,
-	PASS(1, PostProcessVS, ColorMod)
-	)
+technique ColorMod
+{
+  pass cMod
+  {
+    VertexShader   = PostProcessVS;
+    PixelShader    = PS_ColorMod;
+  }
+}

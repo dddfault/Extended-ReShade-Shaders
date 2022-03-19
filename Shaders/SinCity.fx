@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////
-// Custom Tonemapping
+// Sin City
 ///////////////////////////////////////////////////////////////////////////
-// Original code by ---
+// Original code by ----
 // Ported to ReShade 2.0 by Marty McFly
 // Ported to ReShade 4.0 by Insomnia
 // Modified by dddfault
@@ -16,29 +16,31 @@
 
 // PIXEL SHADER ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-void PS_CustomTonemap(float4 vpos : SV_Position, float2 texcoord : TEXCOORD, out float4 color : SV_Target0)
+void PS_SinCity(float4 vpos : SV_Position, float2 texcoord : TEXCOORD, out float4 color : SV_Target0)
 {
   color     = tex2D(ReShade::BackBuffer, texcoord.xy);
-  const float A = 0.665f;
-	const float B = 0.09f;
-	const float C = 0.004f;
-	const float D = 0.445f;
-	const float E = 0.26f;
-	const float F = 0.025f;
-	const float G = 0.16f;//0.145f;
-	const float H = 1.1844f;//1.15f;
 
-    // gamma space or not?
-	color = (((color * (A * color + B) + C) / (color * (D * color + E) + F)) - G) / H;
+  float sinlumi = dot(color.rgb, float3(0.30f,0.59f,0.11f));
+
+	if(color.r > (color.g + 0.2f) && color.r > (color.b + 0.025f))
+	{
+		color.rgb = float3(sinlumi, 0, 0)*1.5;
+	}
+	else
+	{
+		color.rgb = sinlumi;
+	}
+
+  color.a   = 1.0;
 }
 
 // TECHNIQUE //////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-technique CustomTonemaping
+technique SinCity
 {
-  pass customTonemap
+  pass sinCity
   {
     VertexShader   = PostProcessVS;
-    PixelShader    = PS_CustomTonemap;
+    PixelShader    = PS_SinCity;
   }
 }

@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////
-// Custom Tonemapping
+// Spherical Tonemapping
 ///////////////////////////////////////////////////////////////////////////
-// Original code by ---
+// Original code by Ubisoft
 // Ported to ReShade 2.0 by Marty McFly
 // Ported to ReShade 4.0 by Insomnia
 // Modified by dddfault
@@ -13,32 +13,37 @@
 
 // USER INTERFACE /////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
+uniform float sphericalAmount <
+  ui_label    = "Spherical Tonemapping Power";
+  ui_type     = "drag";
+  ui_min      = 0.0;
+  ui_max      = 5.0;
+  ui_step     = 0.01;
+  > = 0.7;
 
 // PIXEL SHADER ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-void PS_CustomTonemap(float4 vpos : SV_Position, float2 texcoord : TEXCOORD, out float4 color : SV_Target0)
+void PS_SphericalTonemap(float4 vpos : SV_Position, float2 texcoord : TEXCOORD, out float4 color : SV_Target0)
 {
   color     = tex2D(ReShade::BackBuffer, texcoord.xy);
-  const float A = 0.665f;
-	const float B = 0.09f;
-	const float C = 0.004f;
-	const float D = 0.445f;
-	const float E = 0.26f;
-	const float F = 0.025f;
-	const float G = 0.16f;//0.145f;
-	const float H = 1.1844f;//1.15f;
 
-    // gamma space or not?
-	color = (((color * (A * color + B) + C) / (color * (D * color + E) + F)) - G) / H;
+  float3 signedColor    = color.rgb * 2.0 - 1.0;
+  float3 sphericalColor = sqrt(1.0 - signedColor.rgb * signedColor.rgb);
+  sphericalColor        = sphericalColor * 0.5 + 0.5;
+  sphericalColor       *= color.rgb;
+  color.rgb            += sphericalColor.rgb * sphericalAmount;
+  color.rgb            *= 0.95;
+
+  color.a   = 1.0;
 }
 
 // TECHNIQUE //////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-technique CustomTonemaping
+technique SphericalTonemapping
 {
-  pass customTonemap
+  pass sphericalTonemap
   {
     VertexShader   = PostProcessVS;
-    PixelShader    = PS_CustomTonemap;
+    PixelShader    = PS_SphericalTonemap;
   }
 }

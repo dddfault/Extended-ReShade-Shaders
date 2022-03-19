@@ -10,18 +10,43 @@
 // INITIAL SETUP //////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 #include "ReShade.fxh"
-#include "Macros.fxh"
 
 // USER INTERFACE /////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-UI_FLOAT_S(CrossContrast, "Contrast", "Cross Process Contast", 0.0, 2.0, 1.0)
-UI_FLOAT_S(CrossSaturation, "Saturation", "Cross Process Saturation", 0.0, 2.0, 1.0)
-UI_FLOAT_S(CrossBrightness, "Brightness", "Cross Process Brightness", -1.0, 1.0, 0.0)
-UI_FLOAT_S(CrossAmount, "Amount", "Cross Process Intensity", 0.05, 1.5, 0.5)
+uniform float CrossContrast <
+  ui_label    = "Contrast";
+  ui_type     = "drag";
+  ui_min      = 0.0;
+  ui_max      = 2.0;
+  ui_step     = 0.01;
+  > = 1.0;
 
+uniform float CrossSaturation <
+  ui_label    = "Saturation";
+  ui_type     = "drag";
+  ui_min      = 0.0;
+  ui_max      = 2.0;
+  ui_step     = 0.01;
+  > = 1.0;
+
+uniform float CrossBrightness <
+  ui_label    = "Brightness";
+  ui_type     = "drag";
+  ui_min      = -1.0;
+  ui_max      = 1.0;
+  ui_step     = 0.01;
+  > = 0.0;
+
+uniform float CrossAmount <
+  ui_label    = "Amount";
+  ui_type     = "drag";
+  ui_min      = 0.05;
+  ui_max      = 2.0;
+  ui_step     = 0.01;
+  > = 0.7;
 // PIXEL SHADER ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-void XProcess(float4 vpos : SV_Position, float2 texcoord : TEXCOORD, out float4 color : SV_Target0)
+void PS_XProcess(float4 vpos : SV_Position, float2 texcoord : TEXCOORD, out float4 color : SV_Target0)
 {
   color     = tex2D(ReShade::BackBuffer, texcoord.xy);
 
@@ -45,7 +70,11 @@ void XProcess(float4 vpos : SV_Position, float2 texcoord : TEXCOORD, out float4 
 
 // TECHNIQUE //////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-
-TECHNIQUE(CrossProcess,
-	PASS(1, PostProcessVS, XProcess)
-	)
+technique CrossProcess
+{
+  pass xProcess
+  {
+    VertexShader   = PostProcessVS;
+    PixelShader    = PS_XProcess;
+  }
+}

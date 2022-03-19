@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////
-// Custom Tonemapping
+// Haarm Peter Duiker Tonemapping
 ///////////////////////////////////////////////////////////////////////////
-// Original code by ---
+// Original code by Ubisoft
 // Ported to ReShade 2.0 by Marty McFly
 // Ported to ReShade 4.0 by Insomnia
 // Modified by dddfault
@@ -16,29 +16,21 @@
 
 // PIXEL SHADER ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-void PS_CustomTonemap(float4 vpos : SV_Position, float2 texcoord : TEXCOORD, out float4 color : SV_Target0)
+void PS_HPDTonemap(float4 vpos : SV_Position, float2 texcoord : TEXCOORD, out float4 color : SV_Target0)
 {
   color     = tex2D(ReShade::BackBuffer, texcoord.xy);
-  const float A = 0.665f;
-	const float B = 0.09f;
-	const float C = 0.004f;
-	const float D = 0.445f;
-	const float E = 0.26f;
-	const float F = 0.025f;
-	const float G = 0.16f;//0.145f;
-	const float H = 1.1844f;//1.15f;
-
-    // gamma space or not?
-	color = (((color * (A * color + B) + C) / (color * (D * color + E) + F)) - G) / H;
+  color.rgb = max((float3)0.0f, color.rgb - 0.004f);
+  color.rgb = pow(abs((color.rgb * (6.2f * color.rgb + 0.5f)) / (color.rgb * (6.2f * color.rgb + 1.7f) + 0.06)), 2.2f);
+  color.a   = 1.0;
 }
 
 // TECHNIQUE //////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-technique CustomTonemaping
+technique HPDTonemapping
 {
-  pass customTonemap
+  pass hpdTonemap
   {
     VertexShader   = PostProcessVS;
-    PixelShader    = PS_CustomTonemap;
+    PixelShader    = PS_HPDTonemap;
   }
 }

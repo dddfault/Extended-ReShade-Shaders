@@ -37,10 +37,6 @@
 * Sin City
 * Fisheye
 * Spherical Tonemapping
-* Watch Dogs Tonemapping
-* Hue Saturation Value
-* ENB Tonemapping
-* 2D Gradient Palette
 
 <!-- GETTING STARTED -->
 ## Getting Started

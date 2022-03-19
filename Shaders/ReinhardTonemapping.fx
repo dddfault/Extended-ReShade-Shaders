@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////
-// Custom Tonemapping
+// Reinhard Tonemapping
 ///////////////////////////////////////////////////////////////////////////
-// Original code by ---
+// Original code by Ubisoft
 // Ported to ReShade 2.0 by Marty McFly
 // Ported to ReShade 4.0 by Insomnia
 // Modified by dddfault
@@ -13,32 +13,40 @@
 
 // USER INTERFACE /////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
+uniform float ReinhardWhitepoint <
+  ui_label    = "Reinhard White Point";
+  ui_tooltip  = "Point above which everything is pure white";
+  ui_type     = "drag";
+  ui_min      = 1.0;
+  ui_max      = 10.0;
+  ui_step     = 0.01;
+  > = 4.0;
+
+uniform float ReinhardScale <
+  ui_label    = "Reinhard Scale";
+  ui_tooltip  = "Amount of applied tonemapping";
+  ui_type     = "drag";
+  ui_min      = 0.0;
+  ui_max      = 2.0;
+  ui_step     = 0.01;
+  > = 0.5;
 
 // PIXEL SHADER ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-void PS_CustomTonemap(float4 vpos : SV_Position, float2 texcoord : TEXCOORD, out float4 color : SV_Target0)
+void PS_ReinhardTonemap(float4 vpos : SV_Position, float2 texcoord : TEXCOORD, out float4 color : SV_Target0)
 {
   color     = tex2D(ReShade::BackBuffer, texcoord.xy);
-  const float A = 0.665f;
-	const float B = 0.09f;
-	const float C = 0.004f;
-	const float D = 0.445f;
-	const float E = 0.26f;
-	const float F = 0.025f;
-	const float G = 0.16f;//0.145f;
-	const float H = 1.1844f;//1.15f;
-
-    // gamma space or not?
-	color = (((color * (A * color + B) + C) / (color * (D * color + E) + F)) - G) / H;
+  color.rgb = (1 + ReinhardScale * color.rgb / (ReinhardWhitepoint * ReinhardWhitepoint)) * color.rgb / (color.rgb + ReinhardScale);
+  color.a   = 1.0;
 }
 
 // TECHNIQUE //////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-technique CustomTonemaping
+technique ReinhardTonemapping
 {
-  pass customTonemap
+  pass reinhardTonemap
   {
     VertexShader   = PostProcessVS;
-    PixelShader    = PS_CustomTonemap;
+    PixelShader    = PS_ReinhardTonemap;
   }
 }
