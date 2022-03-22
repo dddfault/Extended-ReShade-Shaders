@@ -16,13 +16,13 @@
 
 // PIXEL SHADER ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-void PS_HPDTonemap(float4 vpos : SV_Position, float2 texcoord : TEXCOORD, out float4 color : SV_Target0)
-{
-  color     = tex2D(ReShade::BackBuffer, texcoord.xy);
-  color.rgb = max((float3)0.0f, color.rgb - 0.004f);
-  color.rgb = pow(abs((color.rgb * (6.2f * color.rgb + 0.5f)) / (color.rgb * (6.2f * color.rgb + 1.7f) + 0.06)), 2.2f);
-  color.a   = 1.0;
-}
+  void PS_HPDTonemap(float4 vpos : SV_Position, float2 texcoord : TEXCOORD, out float4 color : SV_Target0)
+  {
+    color     = tex2D(ReShade::BackBuffer, texcoord.xy);
+    color.rgb = max((float3)0.0f, color.rgb - 0.004f);
+    color.rgb = pow(abs((color.rgb * (6.2f * color.rgb + 0.5f)) / (color.rgb * (6.2f * color.rgb + 1.7f) + 0.06)), 2.2f);
+    color.a   = 1.0;
+  }
 
 // TECHNIQUE //////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
